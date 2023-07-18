@@ -36,7 +36,7 @@ services:
       - /var/lib/docker/wazuh-docker/multi-node/config/wazuh_indexer_ssl_certs/root-ca-manager.pem:/etc/ssl/root-ca.pem
       - /var/lib/docker/wazuh-docker/multi-node/config/wazuh_indexer_ssl_certs/wazuh.worker.pem:/etc/ssl/filebeat.pem 
       - /var/lib/docker/wazuh-docker/multi-node/config/wazuh_indexer_ssl_certs/wazuh.worker-key.pem:/etc/ssl/filebeat.key
-      - /var/lib/docker/wazuh-docker/multi-node/config/wazuh_cluster/wazuh_worker.conf:/wazuh-config-mount/etc/ossec.conf:ro
+      - /var/lib/docker/wazuh-docker/multi-node/config/wazuh_cluster/wazuh_worker.conf:/wazuh-config-mount/etc/ossec.conf:ro #You may encounter an error when uploading using the portainer. I don't know why, but using variable didn't work and ossec.conf went up in the container as a folder. Once I added the full path it worked perfectly
     extra_hosts:
       wazuh1.indexer: 192.168.15.41 # I needed to use this setting to set new hosts complements to redirect the certificates to the correct  SIEM server.
       wazuh.master: 192.168.15.41 # I Could regenerate new certificates, change the iPS in the certs.yml file and add the correct IP to the certificate. 
