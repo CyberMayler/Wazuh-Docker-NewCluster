@@ -20,6 +20,16 @@ services:
       - SSL_KEY=/etc/ssl/filebeat.key
       - API_USERNAME=wazuh-wui
       - API_PASSWORD=MyS3cr37P450r.*-
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "bootstrap.memory_lock=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 4g  # Limit container memory to 4GB
     volumes:
       - master-wazuh-api-configuration:/var/ossec/api/configuration
       - master-wazuh-etc:/var/ossec/etc
@@ -53,6 +63,7 @@ services:
       nofile:
         soft: 65536
         hard: 65536
+    mem_limit: 3g  # Limit container memory to 3GB
     volumes:
       - wazuh-indexer-data-1:/var/lib/wazuh-indexer
       - ${CONFIG}/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-indexer/certs/root-ca.pem
@@ -77,6 +88,7 @@ services:
       nofile:
         soft: 65536
         hard: 65536
+    mem_limit: 3g  # Limit container memory to 3GB
     volumes:
       - wazuh-indexer-data-2:/var/lib/wazuh-indexer
       - ${CONFIG}/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-indexer/certs/root-ca.pem
@@ -84,6 +96,32 @@ services:
       - ${CONFIG}/wazuh_indexer_ssl_certs/wazuh2.indexer.pem:/usr/share/wazuh-indexer/certs/wazuh2.indexer.pem
       - ${CONFIG}/wazuh_indexer/wazuh2.indexer.yml:/usr/share/wazuh-indexer/opensearch.yml
       - ${CONFIG}/wazuh_indexer/internal_users.yml:/usr/share/wazuh-indexer/opensearch-security/internal_users.yml
+
+  wazuh3.indexer:
+    image: gitlab-dreg.nexxera.com/devops/dockerimages/wazuh/wazuh-indexer:latest
+    hostname: wazuh3.indexer
+    restart: always
+    environment:
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "bootstrap.memory_lock=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 3g  # Limit container memory to 3GB
+    volumes:
+      - wazuh-indexer-data-3:/var/lib/wazuh-indexer
+      - ${CONFIG}/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-indexer/certs/root-ca.pem
+      - ${CONFIG}/wazuh_indexer_ssl_certs/wazuh3.indexer-key.pem:/usr/share/wazuh-indexer/certs/wazuh3.indexer.key
+      - ${CONFIG}/wazuh_indexer_ssl_certs/wazuh3.indexer.pem:/usr/share/wazuh-indexer/certs/wazuh3.indexer.pem
+      - ${CONFIG}/wazuh_indexer/wazuh3.indexer.yml:/usr/share/wazuh-indexer/opensearch.yml
+      - ${CONFIG}/wazuh_indexer/internal_users.yml:/usr/share/wazuh-indexer/plugins/opensearch-security/securityconfig/internal_users.yml
+      - ${CONFIG}/wazuh_indexer/config.yml:/usr/share/wazuh-indexer/plugins/opensearch-security/securityconfig/config.yml
+      - ${CONFIG}/wazuh_indexer/roles_mapping.yml:/usr/share/wazuh-indexer/plugins/opensearch-security/securityconfig/roles_mapping.yml
+      - ${CONFIG}/wazuh_indexer/directory.ldif:/usr/share/wazuh-indexer/plugins/opensearch-security/securityconfig/directory.ldif
 
   wazuh.dashboard:
     image: wazuh/wazuh-dashboard:4.4.5
@@ -141,3 +179,4 @@ volumes:
   master-filebeat-var:
   wazuh-indexer-data-1:
   wazuh-indexer-data-2:
+  wazuh-indexer-data-3:
