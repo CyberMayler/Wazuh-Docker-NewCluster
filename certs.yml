@@ -13,6 +13,7 @@ nodes:
   # As you cannot repeat IPS, you can leave the IP field as DNS and then just manipulate the hosts file of each worker and master so that they can know who is who.
 # extra_hosts:
       #wazuh.master: 192.168.15.41 - you need to point to the master node on eatch new cluster. 
+      #wazuh1.indexer: 192.168.15.41
   server:
     - name: wazuh.master
       ip: wazuh.master
