@@ -161,9 +161,7 @@ services:
       - wazuh.master:wazuh.master
       - wazuh.dashboard:wazuh.dashboard
     volumes:
-      - ${CONFIG}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # need to change de wazuh.worker to the correct IP
-    extra_hosts:
-      wazuh.worker: 192.168.15.41
+      - ${CONFIG}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # need to change de wazuh.worker to the correct new IP
 
 volumes:
   master-wazuh-api-configuration:
